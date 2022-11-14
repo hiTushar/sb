@@ -1,12 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
+import './App.css'
+import Stocks from './components/Stocks';
 
-function App() {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Stocks />,
+  },
+]);
+
+export default function App() {
   return (
-    <div className="App">
-      
-    </div>
-  );
+    <main>
+      <RouterProvider router={router} />
+    </main>
+  )
 }
-
-export default App;
