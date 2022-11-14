@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 export default function Stocks() {
   const [data, setData] = useState([]);
@@ -23,9 +24,9 @@ export default function Stocks() {
                   if(index === 0) {
                     return (
                         <td>
-                          <a href={`https://prototype.sbulltech.com/api/v2/quotes/${column}`} target="_blank">
-                          {column}
-                          </a>
+                          <Link to={`/quotes/${column}`}>
+                            {column}
+                          </Link>
                         </td>
                       )
                   }
