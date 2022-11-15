@@ -5,12 +5,25 @@ import { useParams } from "react-router-dom";
 export default function Quotes() {
     console.log("inside quotes");
     const [data, setData] = useState([]);
+    const [order, setOrder] = useState("asc");
 
     let { stockId } = useParams();
     useEffect(() => {
         axios.get(`https://prototype.sbulltech.com/api/v2/quotes/${stockId}`)
-            .then(res => setData(res.data.payload[stockId]));
-    }, [])
+            .then(res => {console.log("got the data"); setData(res.data.payload[stockId]); return res.data.payload[stockId]})
+            .then(data => {
+                if(order === "asc") {
+                    setData(data.sort((a, b) => Date.parse(a.time) - Date.parse(b.time)));
+                }
+                else {
+                    setData(data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time)));
+                }
+            })
+    }, [order]);
+
+    const toggleOrder = () => {
+        setOrder(order === "asc" ? "desc" : "asc");
+    }
 
     let header, body;
     if(data.length) {
@@ -28,6 +41,9 @@ export default function Quotes() {
                     {body}
                 </tbody>
             </table>
+            <div>
+                <button onClick={toggleOrder}>{order === "asc" ? "desc" : "asc"}</button>
+            </div>
         </div>
     )
 }
