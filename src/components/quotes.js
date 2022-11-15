@@ -10,25 +10,38 @@ export default function Quotes() {
     let { stockId } = useParams();
     useEffect(() => {
         axios.get(`https://prototype.sbulltech.com/api/v2/quotes/${stockId}`)
-            .then(res => {console.log("got the data"); setData(res.data.payload[stockId]); return res.data.payload[stockId]})
-            .then(data => {
-                if(order === "asc") {
-                    setData(data.sort((a, b) => Date.parse(a.time) - Date.parse(b.time)));
-                }
-                else {
-                    setData(data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time)));
-                }
-            })
-    }, [order]);
+            .then(res => {console.log("got the data"); reorderData(order, res.data.payload[stockId]);})
+    }, []);
+
+    const reorderData = (order, data) => {
+        console.log("reorderData", order);
+        if(order === "asc") {
+            console.log('**');
+            setData(data.sort((a, b) => Date.parse(a.time) - Date.parse(b.time)));
+        }
+        else {
+            console.log('##');
+            setData(data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time)));
+        }
+    }
+
+    useEffect(() => {
+        console.log("rearrange", order);
+        reorderData(order, data);
+    }, [order])
 
     const toggleOrder = () => {
+        console.log("toggleOrder", order);
         setOrder(order === "asc" ? "desc" : "asc");
     }
 
     let header, body;
     if(data.length) {
-        header = <tr>{Object.keys(data[0]).map(column => <th>{column}</th>)}</tr>;
-        body = data.map(row => <tr>{Object.values(row).map(val => <td>{val}</td>)}</tr>);
+        console.log(data);
+        header = <tr>{Object.keys(data[0]).map(column => <th key={column}>{column}</th>)}</tr>;
+        body = data.map(row => <tr key={row.price + Date.parse(row.time)}>
+                                {Object.values(row).map(val => <td key={val}>{val}</td>)}
+                               </tr>);
     }
     
     return (
