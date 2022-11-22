@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import _ from "lodash";
 
 export default function Stocks() {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
     axios.get("https://prototype.sbulltech.com/api/v2/instruments")
@@ -20,20 +22,30 @@ export default function Stocks() {
           return json.concat(rowObj)
         }, []);
         setData(data);
+        setFilteredData(data);
       })
   }, [])
 
   const searchRow = (value) => {
     let matchingData = [];
-    // data.slice(1).forEach((row) => {
-    //   if()
-    // })
+    if(!_.isEmpty(value)) {
+      data.forEach((row) => {
+        if(row.Name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+        row.Symbol.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
+          matchingData.push(row);
+        }
+      });
+    }
+    else {
+      matchingData = _.assign(data)
+    }
+    setFilteredData(matchingData)
   }
 
   let body, header;
-  if (data.length) {
-    header = <tr>{Object.keys(data[0]).map(column => <th key={column}>{column}</th>)}</tr>;
-    body = data.map((row) => (
+  if (filteredData.length) {
+    header = <tr>{Object.keys(filteredData[0]).map(column => <th key={column}>{column}</th>)}</tr>;
+    body = filteredData.map((row) => (
       <tr key={row.Symbol}>
         {Object.values(row).map((dataPt, index) => {
           if(index === 0) {
