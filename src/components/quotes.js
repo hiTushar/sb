@@ -14,21 +14,21 @@ export default function Quotes() {
     }, []);
 
     useEffect(() => {
-        let newData = sortData(order, data)
+        let newData = sortData(order, data, 'time')
         setData(newData);
     }, [order])
 
     const getData = (url) => {
         axios.get(url)
             .then(res => {
-                let newData = sortData(order, res.data.payload[stockId]);
+                let newData = sortData(order, res.data.payload[stockId], 'time');
                 setData(newData);
 
             })
     }
 
-    const sortData = (order, data) => {
-        return _.orderBy(data, ['time'], [order]);
+    const sortData = (order, data, field) => {
+        return _.orderBy(data, [field], [order]);
     }
 
     const toggleOrder = () => {
