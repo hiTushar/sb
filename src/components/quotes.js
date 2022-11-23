@@ -6,19 +6,29 @@ import _ from "lodash";
 export default function Quotes() {
     const [data, setData] = useState([]);
     const [order, setOrder] = useState("asc");
+    const [refresh, setRefresh] = useState(0);
 
     let { stockId } = useParams();
     useEffect(() => {
-        axios.get(`https://prototype.sbulltech.com/api/v2/quotes/${stockId}`)
-            .then(res => {reorderData(order, res.data.payload[stockId]);})
+        getData(`https://prototype.sbulltech.com/api/v2/quotes/${stockId}`);
     }, []);
 
     useEffect(() => {
-        reorderData(order, data);
+        let newData = sortData(order, data)
+        setData(newData);
     }, [order])
 
-    const reorderData = (order, data) => {
-        setData(_.orderBy(data, ['time'], [order]));
+    const getData = (url) => {
+        axios.get(url)
+            .then(res => {
+                let newData = sortData(order, res.data.payload[stockId]);
+                setData(newData);
+
+            })
+    }
+
+    const sortData = (order, data) => {
+        return _.orderBy(data, ['time'], [order]);
     }
 
     const toggleOrder = () => {
