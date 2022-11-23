@@ -24,6 +24,22 @@ export default function Quotes() {
                 let newData = sortData(order, res.data.payload[stockId], 'time');
                 setData(newData);
 
+                newData = sortData("asc", res.data.payload[stockId], "valid_till");
+                let closestTime = newData[0].valid_till + " GMT";
+
+                let currentTimeString = new Date(Date.now());
+                currentTimeString = currentTimeString.toUTCString()
+
+                console.log("timeout", Date.parse(closestTime), closestTime);
+                console.log("current", Date.parse(currentTimeString), currentTimeString);
+
+                let duration = (Date.parse(closestTime)) - Date.parse(currentTimeString);
+                console.log(duration);
+
+                if(duration < 0) duration = 0;
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, duration);
             })
     }
 
