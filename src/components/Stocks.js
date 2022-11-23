@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import _ from "lodash";
+import Fuse from "fuse.js";
 
 export default function Stocks() {
   const [data, setData] = useState([]);
@@ -29,12 +30,10 @@ export default function Stocks() {
   const searchRow = (value) => {
     let matchingData = [];
     if(!_.isEmpty(value)) {
-      data.forEach((row) => {
-        if(row.Name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
-        row.Symbol.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
-          matchingData.push(row);
-        }
-      });
+      const fuzzy = new Fuse(data, {
+                      keys: ["Name", "Symbol"]
+                    });
+      matchingData = fuzzy.search(value).map(res => res.item);
     }
     else {
       matchingData = _.assign(data)
@@ -66,7 +65,7 @@ export default function Stocks() {
     <div>
       <input
         type="search"
-        onChange={e => searchRow(e.target.value)}
+        onChange={e => searchRow(e.target.value.trim())}
         placeholder={"Search..."}
       />
       <table>
