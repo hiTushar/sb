@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import Fuse from "fuse.js";
+import { Space, Table, Tag } from 'antd';
 
 export default function Stocks() {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ export default function Stocks() {
                           .split("\n")
                           .map(str => str.split(","));
         let fields = data[0];
-        data = data.slice(1).reduce((json, row) => {
+        data = data.slice(1).reduce((json, row, index) => {
           let rowObj = {};
           fields.forEach((field, index) => {
             rowObj[field] = row[index];
@@ -50,7 +51,7 @@ export default function Stocks() {
           if(index === 0) {
             return (
                 <td key={row.Symbol + dataPt}>
-                  <Link to={`/quotes/${dataPt}`}>
+                  <Link to={`/quotes/${dataPt}`} className="link-tag">
                     {dataPt}
                   </Link>
                 </td>
@@ -62,20 +63,24 @@ export default function Stocks() {
     ))
   }
   return (
-    <div>
-      <input
-        type="search"
-        onChange={e => searchRow(e.target.value.trim())}
-        placeholder={"Search..."}
-      />
-      <table>
-        <thead>
-          {header}
-        </thead>
-        <tbody>
-          {body}
-        </tbody>
-      </table>
+    <div className="stocks-div">
+      <div className="input-div">
+        <input
+          type="search"
+          onChange={e => searchRow(e.target.value.trim())}
+          placeholder={"Search here"}
+        />
+      </div>
+      <div className="table-div">
+        <table>
+          <thead>
+            {header}
+          </thead>
+          <tbody>
+            {body}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

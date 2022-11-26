@@ -60,17 +60,19 @@ export default function Quotes() {
     }
     
     return (
-        <div>
-            <table>
-                <thead>
-                    {header}
-                </thead>
-                <tbody>
-                    {body}
-                </tbody>
-            </table>
-            <div>
-                <button onClick={toggleOrder}>{order === "asc" ? "desc" : "asc"}</button>
+        <div className="quotes-div">
+            <div className="table-div">
+                <table>
+                    <thead>
+                        {header}
+                    </thead>
+                    <tbody>
+                        {body}
+                    </tbody>
+                </table>
+                <div>
+                    <button onClick={toggleOrder}>{order === "asc" ? "desc" : "asc"}</button>
+                </div>
             </div>
         </div>
     )
