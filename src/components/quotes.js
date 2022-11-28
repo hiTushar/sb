@@ -73,7 +73,19 @@ export default function Quotes() {
                     })}
                 </tr>
         body = data.map(row => <tr key={row.price + Date.parse(row.time)}>
-                                {Object.values(row).map(val => <td key={val}>{val}</td>)}
+                                {Object.values(row).map(val => {
+                                    if(typeof val === "string") {
+                                        let temp = new Date(val + " GMT");
+                                        if(Number.isInteger(Date.parse(temp))) {
+                                            val = temp.toLocaleString("en-IN");
+                                        }
+                                    }
+                                    return (
+                                        <td key={val}>
+                                            {val}
+                                        </td>
+                                    )
+                                })}
                                </tr>);
     }
     

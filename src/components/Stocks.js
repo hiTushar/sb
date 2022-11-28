@@ -48,6 +48,12 @@ export default function Stocks() {
     body = filteredData.map((row) => (
       <tr key={row.Symbol}>
         {Object.values(row).map((dataPt, index) => {
+          if(typeof dataPt === "string") {
+            let temp = new Date(dataPt + " GMT");
+            if(Number.isInteger(Date.parse(temp))) {
+              dataPt = temp.toLocaleString("en-IN");
+            }
+        }
           if(index === 0) {
             return (
                 <td key={row.Symbol + dataPt}>
