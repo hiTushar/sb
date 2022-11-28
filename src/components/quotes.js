@@ -32,7 +32,11 @@ export default function Quotes() {
 
                 let duration = (Date.parse(closestTime)) - Date.parse(currentTimeString);
 
-                if(duration < 0) duration = 0;
+                if(duration < 0) {
+                    duration = 5000; // duration will come as -ve when the current expired price is still present in the response (API issue). 
+                                                  // adding a default timeout for refresh for such case.
+                    console.log("expired price point still present!!");
+                }
                 setTimeout(() => {
                     window.location.reload(true);
                 }, duration);
