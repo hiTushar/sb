@@ -53,7 +53,25 @@ export default function Quotes() {
 
     let header, body;
     if(data.length) {
-        header = <tr>{Object.keys(data[0]).map(column => <th key={column}>{column}</th>)}</tr>;
+        header = <tr>
+                    {Object.keys(data[0]).map(column => {
+                        let sort = false;
+                        if(column === "time") {
+                            sort = true;
+                        }
+                        return (
+                            <th key={column} className={sort ? "column-sort" : ""}>
+                                {column}
+                                {sort 
+                                    ? <div>
+                                        <button onClick={toggleOrder}>{order === "asc" ? "desc" : "asc"}</button>
+                                      </div>
+                                    : <></>
+                                }
+                            </th>
+                        )
+                    })}
+                </tr>
         body = data.map(row => <tr key={row.price + Date.parse(row.time)}>
                                 {Object.values(row).map(val => <td key={val}>{val}</td>)}
                                </tr>);
@@ -70,9 +88,6 @@ export default function Quotes() {
                         {body}
                     </tbody>
                 </table>
-                <div>
-                    <button onClick={toggleOrder}>{order === "asc" ? "desc" : "asc"}</button>
-                </div>
             </div>
         </div>
     )
