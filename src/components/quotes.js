@@ -30,11 +30,7 @@ export default function Quotes() {
                 let currentTimeString = new Date(Date.now());
                 currentTimeString = currentTimeString.toUTCString()
 
-                console.log("timeout", Date.parse(closestTime), closestTime);
-                console.log("current", Date.parse(currentTimeString), currentTimeString);
-
                 let duration = (Date.parse(closestTime)) - Date.parse(currentTimeString);
-                console.log(duration);
 
                 if(duration < 0) duration = 0;
                 setTimeout(() => {
