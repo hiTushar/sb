@@ -89,6 +89,12 @@ input {
   padding: 50px;
 }
 
-.link-tag {
+a {
   text-decoration: none;
+  cursor: pointer;
+}
+
+.column-sort {
+  display: flex;
+  justify-content: space-between;
 }
