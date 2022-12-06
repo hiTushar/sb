@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import Fuse from "fuse.js";
+import Utils from "../utils/Utils";
 
 export default function Stocks() {
   const [data, setData] = useState([]);
@@ -11,17 +12,7 @@ export default function Stocks() {
   useEffect(() => {
     axios.get("https://prototype.sbulltech.com/api/v2/instruments")
       .then(res => {
-        let data = res.data.trim()
-                          .split("\n")
-                          .map(str => str.split(","));
-        let fields = data[0];
-        data = data.slice(1).reduce((json, row, index) => {
-          let rowObj = {};
-          fields.forEach((field, index) => {
-            rowObj[field] = row[index];
-          })
-          return json.concat(rowObj)
-        }, []);
+        let data = Utils.basicCsvToJson(res.data)
         setData(data);
         setFilteredData(data);
       })
