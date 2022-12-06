@@ -2,6 +2,7 @@
 
 .App {
   text-align: center;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .App-logo {
@@ -48,7 +49,6 @@ table {
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
-  font-family: 'Roboto Mono', monospace;
 }
 .table-div {
   border: solid 1px rgb(146, 144, 144);
@@ -73,7 +73,6 @@ input {
   box-sizing: border-box;
   padding: 20px 15px;
   font-size: 22px;
-  font-family: 'Roboto Mono', monospace;
 }
 .input-div {
   display: flex;
@@ -97,4 +96,15 @@ a {
 .column-sort {
   display: flex;
   justify-content: space-between;
+}
+
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+.error-page img {
+  width: 15%;
 }

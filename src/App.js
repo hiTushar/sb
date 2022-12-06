@@ -6,15 +6,17 @@ import {
 import './App.css'
 import Stocks from './components/Stocks';
 import Quotes from "./components/Quotes";
+import ErrorPage from "./components/Error";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Stocks />,
+    errorElement: <ErrorPage />
   },
   {
     path: "quotes/:stockId",
-    element: <Quotes />,
+    element: <Quotes />
   }
 ]);
 
