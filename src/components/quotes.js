@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import _ from "lodash";
+import caution from "../assets/triangle-caution-yellow-sign-icon-free-vector.jpg"
 
 export default function Quotes() {
     const [data, setData] = useState([]);
@@ -20,25 +21,30 @@ export default function Quotes() {
     const getData = (url) => {
         axios.get(url)
             .then(res => {
-                let newData = sortData(order, res.data.payload[stockId], 'time');
-                setData(newData);
-
-                newData = sortData("asc", res.data.payload[stockId], "valid_till");
-                let closestTime = newData[0].valid_till + " GMT";
-
-                let currentTimeString = new Date(Date.now());
-                currentTimeString = currentTimeString.toUTCString()
-
-                let duration = (Date.parse(closestTime)) - Date.parse(currentTimeString);
-
-                if(duration < 0) {
-                    duration = 5000; // duration will come as -ve when the current expired price is still present in the response (API issue). 
-                                                  // adding a default timeout for refresh for such case.
-                    console.log("expired price point still present!!");
+                if(res.data.success) {
+                    let newData = sortData(order, res.data.payload[stockId], 'time');
+                    setData(newData);
+    
+                    newData = sortData("asc", res.data.payload[stockId], "valid_till");
+                    let closestTime = newData[0].valid_till + " GMT";
+    
+                    let currentTimeString = new Date(Date.now());
+                    currentTimeString = currentTimeString.toUTCString()
+    
+                    let duration = (Date.parse(closestTime)) - Date.parse(currentTimeString);
+    
+                    if(duration < 0) {
+                        duration = 5000; // duration will come as -ve when the current expired price is still present in the response (API issue). 
+                                                      // adding a default timeout for refresh for such case.
+                        console.log("expired price point still present!!");
+                    }
+                    setTimeout(() => {
+                        window.location.reload(true);
+                    }, duration);
                 }
-                setTimeout(() => {
-                    window.location.reload(true);
-                }, duration);
+                else {
+                    setData(res.data.err_msg);
+                }
             })
     }
 
@@ -50,8 +56,8 @@ export default function Quotes() {
         setOrder(order === "asc" ? "desc" : "asc");
     }
 
-    let header, body;
-    if(data.length) {
+    let header, body = null;
+    if(_.isArray(data) && data.length) {
         header = <tr>
                     {Object.keys(data[0]).map(column => {
                         let sort = false;
@@ -90,16 +96,30 @@ export default function Quotes() {
     
     return (
         <div className="quotes-div">
-            <div className="table-div">
-                <table>
-                    <thead>
-                        {header}
-                    </thead>
-                    <tbody>
-                        {body}
-                    </tbody>
-                </table>
-            </div>
+            {
+                body ? (
+                    <div className="table-div">
+                        <table>
+                            <thead>
+                                {header}
+                            </thead>
+                            <tbody>
+                                {body}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="error-page">
+                        <img src={caution}/>
+                        {data}
+                        <br/>
+                        <br/>
+                        <Link to="/" className="link-tag">
+                            Return to Homepage?
+                        </Link>
+                    </div>
+                )
+            }
         </div>
     )
 }
