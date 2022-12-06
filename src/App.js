@@ -12,7 +12,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Stocks />,
-    errorElement: <ErrorPage />
+    errorElement: <ErrorPage errorMsg="Invalid URL"/>
   },
   {
     path: "quotes/:stockId",

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import _ from "lodash";
 import caution from "../assets/triangle-caution-yellow-sign-icon-free-vector.jpg"
+import ErrorPage from "./Error";
 
 export default function Quotes() {
     const [data, setData] = useState([]);
@@ -109,15 +110,7 @@ export default function Quotes() {
                         </table>
                     </div>
                 ) : (
-                    <div className="error-page">
-                        <img src={caution}/>
-                        {data}
-                        <br/>
-                        <br/>
-                        <Link to="/" className="link-tag">
-                            Return to Homepage?
-                        </Link>
-                    </div>
+                    <ErrorPage errorMsg={data} />
                 )
             }
         </div>

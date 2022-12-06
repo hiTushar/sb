@@ -1,14 +1,14 @@
 import { useRouteError, Link } from "react-router-dom";
 import caution from "../assets/triangle-caution-yellow-sign-icon-free-vector.jpg"
 
-export default function ErrorPage() {
+export default function ErrorPage(props) {
     const error = useRouteError();
-    console.error(error);
+    if (error) console.error(error);
 
     return (
         <div className="error-page">
             <img src={caution}/>
-            The URL does not Exist!
+            {props.errorMsg}
             <br/>
             <br/>
             <Link to="/" className="link-tag">
