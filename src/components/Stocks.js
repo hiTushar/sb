@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import Fuse from "fuse.js";
-import { Space, Table, Tag } from 'antd';
 
 export default function Stocks() {
   const [data, setData] = useState([]);

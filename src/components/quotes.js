@@ -6,7 +6,6 @@ import _ from "lodash";
 export default function Quotes() {
     const [data, setData] = useState([]);
     const [order, setOrder] = useState("asc");
-    const [refresh, setRefresh] = useState(0);
 
     let { stockId } = useParams();
     useEffect(() => {
