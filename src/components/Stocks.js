@@ -4,14 +4,20 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import Fuse from "fuse.js";
 import Utils from "../utils/Utils";
+import ErrorPage from "./Error";
+import Loader from "./Loader";
 
 export default function Stocks() {
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([])
+  const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     axios.get("https://prototype.sbulltech.com/api/v2/instruments")
       .then(res => {
+        setLoading(false);
+
         let data = Utils.basicCsvToJson(res.data)
         setData(data);
         setFilteredData(data);
@@ -32,7 +38,7 @@ export default function Stocks() {
     setFilteredData(matchingData)
   }
 
-  let body, header;
+  let header, body = null;
   if (filteredData.length) {
     header = <tr>{Object.keys(filteredData[0]).map(column => <th key={column}>{column}</th>)}</tr>;
     body = filteredData.map((row) => (
@@ -60,23 +66,35 @@ export default function Stocks() {
   }
   return (
     <div className="stocks-div">
-      <div className="input-div">
-        <input
-          type="search"
-          onChange={e => searchRow(e.target.value.trim())}
-          placeholder={"Search here"}
-        />
-      </div>
-      <div className="table-div">
-        <table>
-          <thead>
-            {header}
-          </thead>
-          <tbody>
-            {body}
-          </tbody>
-        </table>
-      </div>
+      {
+        loading ? (
+          <Loader />
+        ) : (
+          body ? (
+            <>
+              <div className="input-div">
+                <input
+                  type="search"
+                  onChange={e => searchRow(e.target.value.trim())}
+                  placeholder={"Search here"}
+                />
+              </div>
+              <div className="table-div">
+                <table>
+                  <thead>
+                    {header}
+                  </thead>
+                  <tbody>
+                    {body}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <ErrorPage errorMsg="No Data Available at the moment..." />
+          )
+        )
+      }
     </div>
   )
 }

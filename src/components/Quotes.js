@@ -2,14 +2,15 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import _ from "lodash";
-import caution from "../assets/triangle-caution-yellow-sign-icon-free-vector.jpg"
 import ErrorPage from "./Error";
 import Utils from "../utils/Utils";
+import Loader from "./Loader";
 
 export default function Quotes() {
     const [data, setData] = useState([]);
     const [order, setOrder] = useState("asc");
     const [refresh, setRefresh] = useState(0); // to invoke new API call after a set duration
+    const [loading, setLoading] = useState(false);
 
     let { stockId } = useParams();
     useEffect(() => {
@@ -22,8 +23,11 @@ export default function Quotes() {
     }, [order])
 
     const getData = (url) => {
+        setLoading(true);
         axios.get(url)
             .then(res => {
+                setLoading(false);
+
                 if(res.data.success) {
                     let newData = Utils.sortData(order, res.data.payload[stockId], 'time');
                     setData(newData);
@@ -96,19 +100,23 @@ export default function Quotes() {
     return (
         <div className="quotes-div">
             {
-                body ? (
-                    <div className="table-div">
-                        <table>
-                            <thead>
-                                {header}
-                            </thead>
-                            <tbody>
-                                {body}
-                            </tbody>
-                        </table>
-                    </div>
+                loading ? (
+                    <Loader />
                 ) : (
-                    <ErrorPage errorMsg={data} />
+                    body ? (
+                        <div className="table-div">
+                            <table>
+                                <thead>
+                                    {header}
+                                </thead>
+                                <tbody>
+                                    {body}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <ErrorPage errorMsg={data} />
+                    )
                 )
             }
         </div>
