@@ -8,11 +8,12 @@ import ErrorPage from "./Error";
 export default function Quotes() {
     const [data, setData] = useState([]);
     const [order, setOrder] = useState("asc");
+    const [refresh, setRefresh] = useState(0); // to invoke new API call after a set duration
 
     let { stockId } = useParams();
     useEffect(() => {
         getData(`https://prototype.sbulltech.com/api/v2/quotes/${stockId}`);
-    }, []);
+    }, [refresh]);
 
     useEffect(() => {
         let newData = sortData(order, data, 'time')
@@ -32,15 +33,15 @@ export default function Quotes() {
                     let currentTimeString = new Date(Date.now());
                     currentTimeString = currentTimeString.toUTCString()
     
-                    let duration = (Date.parse(closestTime)) - Date.parse(currentTimeString);
+                    let duration = Date.parse(closestTime) - Date.parse(currentTimeString);
     
-                    if(duration < 0) {
-                        duration = 5000; // duration will come as -ve when the current expired price is still present in the response (API issue). 
-                                                      // adding a default timeout for refresh for such case.
+                    if(duration <= 0) {
+                        duration = 3000; // duration will come as -ve or zero when the current expired price is still present in the response (API issue). 
+                                         // adding a default timeout for new API call for such case.
                         console.log("expired price point still present!!");
                     }
                     setTimeout(() => {
-                        window.location.reload(true);
+                        setRefresh(!refresh);
                     }, duration);
                 }
                 else {
