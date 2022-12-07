@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import _ from "lodash";
 import caution from "../assets/triangle-caution-yellow-sign-icon-free-vector.jpg"
 import ErrorPage from "./Error";
+import Utils from "../utils/Utils";
 
 export default function Quotes() {
     const [data, setData] = useState([]);
@@ -16,7 +17,7 @@ export default function Quotes() {
     }, [refresh]);
 
     useEffect(() => {
-        let newData = sortData(order, data, 'time')
+        let newData = Utils.sortData(order, data, 'time')
         setData(newData);
     }, [order])
 
@@ -24,10 +25,10 @@ export default function Quotes() {
         axios.get(url)
             .then(res => {
                 if(res.data.success) {
-                    let newData = sortData(order, res.data.payload[stockId], 'time');
+                    let newData = Utils.sortData(order, res.data.payload[stockId], 'time');
                     setData(newData);
     
-                    newData = sortData("asc", res.data.payload[stockId], "valid_till");
+                    newData = Utils.sortData("asc", res.data.payload[stockId], "valid_till");
                     let closestTime = newData[0].valid_till + " GMT";
     
                     let currentTimeString = new Date(Date.now());
@@ -48,10 +49,6 @@ export default function Quotes() {
                     setData(res.data.err_msg);
                 }
             })
-    }
-
-    const sortData = (order, data, field) => {
-        return _.orderBy(data, [field], [order]);
     }
 
     const toggleOrder = () => {

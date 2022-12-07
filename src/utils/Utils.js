@@ -13,4 +13,8 @@ export default class Utils {
         }, []);
         return data;
     }
+
+    static sortData = (order, data, field) => {
+        return _.orderBy(data, [field], [order]);
+    }
 }
