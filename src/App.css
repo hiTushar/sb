@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
 
+* {
+  font-family: 'Roboto Mono', monospace;
+}
+
 .App {
   text-align: center;
-  font-family: 'Roboto Mono', monospace;
 }
 
 .App-logo {
@@ -41,7 +44,6 @@
 }
 
 .stocks-div {
-  border: solid green;
   padding: 50px;
 }
 
@@ -91,6 +93,7 @@ input {
 a {
   text-decoration: none;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .column-sort {
@@ -103,7 +106,6 @@ a {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
 }
 .error-page img {
   width: 15%;
